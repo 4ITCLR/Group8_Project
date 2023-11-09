@@ -1,0 +1,149 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+a.navbar-brand {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
+}
+
+.navbar-item {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
+    text-align: center;
+}
+
+.nav-link {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
+    padding: 0.1rem;
+    width: 100%;
+}
+
+.navbar-link {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
+    padding: 0.8rem;
+}
+
+
+
+li.nav-item1{
+    background-color: black;
+    border: solid;
+    color: white;
+    padding: 11px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+ 
+    
+}
+
+
+li.nav-item2 {
+    background-color: black;
+    border: solid;
+    color: white;
+    padding: 11px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    
+    
+}
+
+ul.navbar1-nav{
+    width: 15%;
+    display: inline;
+
+    
+}
+
+button.button1  {
+    background-color: black;
+    border: solid;
+    color: white;
+    width: 100%
+
+}
+
+button.btn {
+    background-color: black;
+    border: solid;
+    color: white;
+    width: 100%
+}
+
+button.btn2 {
+    background-color: black;
+    border: solid;
+    color: white;
+    width: 20%
+    
+}
+
+button.btn3 {
+    background-color: black;
+    border: solid;
+    color: white;
+    width: 20%
+    
+}
+
+
+
+td.view-button {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px
+}
+
+
+h1 {
+    font-family: 'Roboto Mono', monospace;
+    font-size:70px;
+    text-align: center;
+    text-transform:capitalize;
+}
+
+h2 {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 40px;
+    text-align: center;
+    text-transform: capitalize;
+}
+label {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px
+}
+
+
+h4 {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px
+}
+
+form.cart{
+
+    padding-left: 550px;
+    padding-top: -500px;
+}
+
+
