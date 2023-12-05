@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Nov 28, 2023 at 07:56 PM
+-- Generation Time: Dec 05, 2023 at 10:31 AM
 -- Server version: 8.0.31
 -- PHP Version: 8.0.26
 
@@ -41,25 +41,46 @@ CREATE TABLE IF NOT EXISTS `cameras` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `cameras_user_id_foreign` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `cameras`
 --
 
 INSERT INTO `cameras` (`id`, `brand`, `name`, `description`, `quantity`, `price`, `image`, `user_id`, `created_at`, `updated_at`) VALUES
-(1, 'Olympus', 'Some', 'Classin', 2, '200.00', NULL, 1, '2023-11-28 10:36:45', '2023-11-28 10:36:45'),
-(2, 'Olympus', 'Trip 500', 'Classic', 2, '200.00', NULL, 1, '2023-11-28 10:46:14', '2023-11-28 10:46:14'),
-(3, 'Olympus', 'Trip 500', 'Classic', 2, '200.00', NULL, 1, '2023-11-28 10:46:33', '2023-11-28 10:46:33'),
-(4, 'Olympus', 'Trip 500', 'Classic', 2, '200.00', NULL, 1, '2023-11-28 10:47:46', '2023-11-28 10:47:46'),
-(5, 'Olympus', 'Trip 500', 'Classic', 2, '200.00', NULL, 1, '2023-11-28 10:49:24', '2023-11-28 10:49:24'),
-(6, 'Olympus', 'Trip 500', 'Classic', 2, '200.00', NULL, 1, '2023-11-28 10:50:08', '2023-11-28 10:50:08'),
-(7, 'Olympus', 'Trip 500', 'Classic camera', 2, '200.00', NULL, 1, '2023-11-28 10:50:28', '2023-11-28 10:50:28'),
-(8, 'Olympus', 'Some', 'Classsicc', 2, '500.00', NULL, 1, '2023-11-28 11:14:22', '2023-11-28 11:14:22'),
-(9, 'Olympus', 'Trip 500', 'Somethingss', 2, '300.00', NULL, 1, '2023-11-28 11:15:58', '2023-11-28 11:15:58'),
-(10, 'Olympus', 'Trip 500', 'Somee filess', 2, '300.00', NULL, 1, '2023-11-28 11:16:40', '2023-11-28 11:16:40'),
-(11, 'Olympus', 'Some', 'Somees', 2, '300.00', NULL, 1, '2023-11-28 11:40:41', '2023-11-28 11:40:41'),
-(12, 'sda', 'dsad', 'sdas', 2, '300.00', NULL, 1, '2023-11-28 11:50:25', '2023-11-28 11:50:25');
+(17, 'Nikon', 'TW zoom 3570', 'This is the best classic camera', 3, '2500.00', '1701772247.png', 1, '2023-12-05 02:29:37', '2023-12-05 02:30:47'),
+(15, 'Olympus', 'Trip 500', 'Classic Trip500 adventure', 2, '20000.00', '1701279935.png', 1, '2023-11-29 09:45:36', '2023-11-29 09:45:36');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `carts`
+--
+
+DROP TABLE IF EXISTS `carts`;
+CREATE TABLE IF NOT EXISTS `carts` (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `cam_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `brand` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `quantity` int NOT NULL,
+  `price` decimal(8,2) NOT NULL,
+  `image` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` bigint UNSIGNED NOT NULL,
+  `status` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `carts_user_id_foreign` (`user_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `carts`
+--
+
+INSERT INTO `carts` (`id`, `cam_id`, `brand`, `name`, `quantity`, `price`, `image`, `user_name`, `user_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, '16', 'Nikon', 'TW zoom 3570', 1, '2550.00', '1701761180.png', 'User', 2, 'sold', '2023-12-05 01:48:55', '2023-12-05 02:03:45');
 
 -- --------------------------------------------------------
 
@@ -73,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `migrations`
@@ -87,7 +108,11 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (5, '2023_11_22_190809_create_cameras_table', 2),
 (6, '2023_11_28_164106_create_cameras_table', 3),
 (7, '2023_11_28_174302_create_cameras_table', 4),
-(8, '2023_11_28_180722_create_cameras_table', 5);
+(8, '2023_11_28_180722_create_cameras_table', 5),
+(9, '2023_12_05_075650_create_cart_table', 6),
+(10, '2023_12_05_085252_create_carts_table', 7),
+(11, '2023_12_05_091026_create_carts_table', 8),
+(12, '2023_12_05_094555_create_carts_table', 9);
 
 -- --------------------------------------------------------
 
