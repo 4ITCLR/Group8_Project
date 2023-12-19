@@ -13,6 +13,7 @@ class UserController extends Controller
         $incomingFields = $request->validate([
             'name' => ['required', Rule::unique('users', 'name')],
             'email' => ['required', Rule::unique('users', 'email')],
+            'address' => 'required',
             'role_as' => 'required',
             'password' => 'required_with:pswd-repeat',
         ]);
@@ -28,6 +29,7 @@ class UserController extends Controller
     }
 
     public function login(Request $request){
+            
         $incomingFields = $request->validate([
             'email' => 'required',
             'password' => 'required'
@@ -42,13 +44,68 @@ class UserController extends Controller
             }
         }
 
-        return back()->withErrors(['email' => 'Invalid login credentials.']);
+        return back()->withErrors(['failed' => 'Invalid login credentials!']);
     }
 
     public function logout(){
+        
         auth()->logout();
+        // Destroy the session
+        session()->flush();
         return redirect('/');
     }
+
+
+    
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function editUser()
+    {
+        $user = auth()->id();
+
+        // Start a new session or resume an existing one
+        session()->start();
+    
+        // Store data in the session
+        session()->put('user_id', $user);
+    
+        // Retrieve data from the session
+        $userId = session()->get('user_id');
+    
+        // Check if a value exists in the session
+        if (session()->has('user_id')) {
+
+        
+            $user = User::where('id', $userId)->get();
+          
+            return view('useredit', ['user' => $user]);
+
+        }else {
+            return redirect('/');
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function updateUser(Request $request, string $id)
+    {
+        $user = User::findOrFail($id);
+
+        $incomingFields = $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'address' => 'required',
+        ]);
+        
+       
+
+        $user->update($incomingFields);
+        return redirect('/userdashboard')->with('success','User updated successfully.');
+    }
+
+ 
 
     
 }

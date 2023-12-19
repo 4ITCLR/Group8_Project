@@ -92,6 +92,32 @@
         .edit-btn:hover{
             background-color: #000;
         }
+
+        footer {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            left: 0;
+            position: fixed;
+            width: 99%;
+            bottom: 0;
+            color: black;
+            background-color: #f5f5f5;
+            padding: 10px;
+            text-align: center;
+        }
+        .total{
+            font-weight: bold;
+            font-size: 2em
+        }
+        .form_s{
+            right: -300px;
+            position: relative;
+            margin: 0;
+        }
+
+
+
     </style>
 </head>
 <body>
@@ -101,6 +127,7 @@
   <a href="/contact">Contact</a>
   <a href="/about">About</a>
   <a href="#">My Cart</a>
+  <a href="/userorders">My Orders</a>
   <form method="POST" action="/logout">
     @csrf
   <button>Logout</button>
@@ -138,7 +165,7 @@
                     <input type="hidden" name="user_name" value="{{ $user->name }}" />
                     <input type="hidden" name="quantity"  value="{{ $cart->quantity }}"/>
                     <input type="hidden" name="status" value="sold" />
-                    <p><button class="edit-btn">Buy</button></p>
+                    <p><button class="edit-btn">Checkout</button></p>
                 </form>
             </div>
           
@@ -155,6 +182,29 @@
 </div>
 @endforeach
 
+    <footer>
+       
+    <p class="total">Total</p>
+    
+    <p class="total">
+    &#8369; {{ $total }}
 
+    
+    <form class="form_s" method="POST" action="/checkout">
+        @csrf
+        @method('PUT')
+        @foreach ($carts as $index => $cart)
+        @if ($cart->status == 'added')
+            <input type="hidden" name="cart_id[{{ $index }}]" value="{{ $cart->id }}" />
+            <input type="hidden" name="cam_id[{{ $index }}]" value="{{ $cart->cam_id }}" />
+            <input type="hidden" name="quantity[{{ $index }}]"  value="{{ $cart->quantity }}"/>
+        @endif
+        @endforeach
+    <button class="edit-btn">Checkout All</button>
+    </form>
+    </p>
+
+    
+  </footer>
 </body>
 </html>

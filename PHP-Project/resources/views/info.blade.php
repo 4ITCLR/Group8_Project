@@ -153,52 +153,47 @@
 <body>
 
 <div class="navbar">
-  <a href="/dashboard">Home</a>
+    <a href="/userdashboard">Home</a>
+    <a href="/contact">Contact</a>
+    <a href="/about">About</a>
+    <a href="/usercart">My Cart</a>
+    <a href="/userorders">My Orders</a>
+    <a href="#">My Details</a>
   <form method="POST" action="/logout">
     @csrf
   <button>Logout</button>
   </form>
   <div class="logo">Analouge Mafia</div>
 </div>
-
+@foreach ($user as $user)
 <div class="welcome">
-<h1>Welcome Admin</h1>
-<a href="/dashboard"class="my-button">Cancel Update</a>
+<h1>Welcome {{$user->name}}</h1>
+<a href="/userdashboard"class="my-button">Cancel Update</a>
 <br>
 <br>
 
-<form action="/edit-camera/{{$camera->id}}" method="POST" enctype="multipart/form-data">
+<form action="/edit-user/{{$user->id}}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT')
     <div class="container">
     <div class="form">
     <div class="form-group">
-        <label for="name">Brand:</label>
-        <input type="text" id="brand" name="brand" value="{{$camera->brand}}" required>
-    </div>
-    <br>
-    <div class="form-group">
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name" value="{{$camera->name}}" required>
+        <input type="text" id="brand" name="brand" value="{{$user->name}}" disabled>
     </div>
     <br>
     <div class="form-group">
-        <label for="description">Description:</label>
-        <textarea id="description" name="description" required>{{$camera->description}}</textarea>
+        <label for="name">Email:</label>
+        <input type="text" id="name" name="name" value="{{$user->email}}" disabled>
     </div>
     <br>
     <div class="form-group">
-        <label for="quantity">Quantity:</label>
-        <input type="number" id="quantity" name="quantity" value="{{$camera->quantity}}" required>
+        <label for="description">Address:</label>
+        <textarea id="description" name="description" disabled>{{$user->address}}</textarea>
     </div>
     <br>
     <div class="form-group">
-        <label for="quantity">Price:</label>
-        <input type="number" id="price" name="price" value="{{$camera->price}}" required>
-    </div>
-    <br>
-    <div class="form-group">
-    <button class="my-button">Update Camera</button>
+    <button class="my-button">Edit</button>
     </div>
     
 </div>
@@ -214,6 +209,6 @@
 </div>
 
 
-
+@endforeach
 </body>
 </html>

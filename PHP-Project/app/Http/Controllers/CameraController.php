@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use id;
 
 class CameraController extends Controller
 {
@@ -17,9 +18,28 @@ class CameraController extends Controller
      */
     public function home()
     {
+        
+
+        // Start a new session or resume an existing one
+        session()->start();
+        
+        $user = auth()->id();
+        
+        // Store data in the session
+        session()->put('user_id', $user);
+    
+        // Retrieve data from the session
+        $userId = session()->get('user_id');
+    
+        // Check if a value exists in the session
+        if (session()->has('user_id')) {
         $user = User::where('id', auth()->id())->get();
         $cameras = Camera::orderBy('brand')->get();
         return view('userhome', compact('cameras'), ['user' => $user]);
+    }
+        else {
+            return redirect('/');
+        }
     }
 
     /**
@@ -64,9 +84,29 @@ class CameraController extends Controller
      * Display the specified resource.
      */
     public function show()
-    {
-        $cameras = Camera::orderBy('brand')->get();
-        return view('home', ['cameras' => $cameras]);
+    {    
+        $user = auth()->id();
+
+        // Start a new session or resume an existing one
+        session()->start();
+    
+        // Store data in the session
+        session()->put('user_id', $user);
+    
+        // Retrieve data from the session
+        $userId = session()->get('user_id');
+    
+        // Check if a value exists in the session
+        if (session()->has('user_id')) {
+            $cameras = Camera::orderBy('brand')->get();
+            return view('home', ['cameras' => $cameras]);
+        }else {
+            return redirect('/');
+        }
+    
+        
+
+        
     }
 
     /**
@@ -132,6 +172,7 @@ class CameraController extends Controller
             'user_name' => 'required',
             'image' => 'required',
             'status' => 'required',
+            'address' => 'required',
         ]);
            
         
@@ -149,9 +190,37 @@ class CameraController extends Controller
      */
     public function showCart()
     {
-        $user = User::where('id', auth()->id())->get();
-        $carts = Cart::where('user_id', auth()->id())->get();
-        return view('usercart', ['carts' => $carts], ['user' => $user]);
+        $user = auth()->id();
+
+        // Start a new session or resume an existing one
+        session()->start();
+    
+        // Store data in the session
+        session()->put('user_id', $user);
+    
+        // Retrieve data from the session
+        $userId = session()->get('user_id');
+    
+        // Check if a value exists in the session
+        if (session()->has('user_id')) {
+
+
+            $total = Cart::where([['user_id', $userId],['status', 'added']])->sum(Cart::raw('quantity * price'));
+            $user = User::where('id', $userId)->get();
+            $carts = Cart::where('user_id', $userId)->get();
+            return view('usercart', ['carts' => $carts, 'user' => $user, 'total' => $total]);
+
+
+
+
+
+
+
+
+        }else {
+            return redirect('/');
+        }
+        
     }
 
      /**
@@ -182,7 +251,7 @@ class CameraController extends Controller
 
         $cart->update($incomingFields);
         
-        return redirect('/userdashboard')->with('success','Camera bought successfully.');
+        return redirect('/usercart')->with('success','Camera bought successfully.');
     }
 
 
@@ -190,11 +259,120 @@ class CameraController extends Controller
      * Sold Items.
      */
     public function soldCam()
-    {
-        $user = User::where('id', auth()->id())->get();
-        $carts = Cart::orderBy('updated_at')->get();
-        return view('adminsold', ['carts' => $carts], ['user' => $user]);
+    {   
+        $user = auth()->id();
+
+        // Start a new session or resume an existing one
+        session()->start();
+    
+        // Store data in the session
+        session()->put('user_id', $user);
+    
+        // Retrieve data from the session
+        $userId = session()->get('user_id');
+    
+        // Check if a value exists in the session
+        if (session()->has('user_id')) {
+            $user = User::where('id', auth()->id())->get();
+            $carts = Cart::orderBy('updated_at')->get();
+            return view('adminsold', ['carts' => $carts], ['user' => $user]);
+        }else {
+            return redirect('/');
+        }
+        
     }
+
+
+    /**
+     * Display a order status.
+     */
+    public function orders()
+    {
+        $user = auth()->id();
+
+        // Start a new session or resume an existing one
+        session()->start();
+    
+        // Store data in the session
+        session()->put('user_id', $user);
+    
+        // Retrieve data from the session
+        $userId = session()->get('user_id');
+    
+        // Check if a value exists in the session
+        if (session()->has('user_id')) {
+
+
+            $total = Cart::where([['user_id', $userId],['status', 'sold']])->sum(Cart::raw('quantity * price'));
+            $user = User::where('id', $userId)->get();
+
+            $carts = Cart::where('user_id', $userId)
+                ->where(function ($query) {
+                    $query->where('status', 'sold')
+                          ->orWhere('status', 'delivered');
+                })
+                ->get();
+                
+            return view('userorders', ['carts' => $carts, 'user' => $user, 'total' => $total]);
+
+
+
+
+
+
+
+
+        }else {
+            return redirect('/');
+        }
+        
+    }
+
+    public function deliverCamera(Request $request, string $id)
+    {
+        $cart = Cart::findOrFail($id);
+       
+        $incomingFields = $request->validate([
+            'cart_id' => 'required',
+
+            
+        ]);
+
+        $cart_id = $incomingFields['cart_id'];
+  
+
+        $new_stat = 'delivered';
+
+        Cart::where('id', $cart_id)->update(['status' => $new_stat]);
+
+        
+        return redirect('/sold-camera')->with('success','Camera bought successfully.');
+    }
+
+
+    /**
+     * Checkout all resource in storage.
+     */
+    public function checkoutCamera(Request $request)
+    {
+        
+       
+        $cart_ids = (array) $request->input('cart_id');
+        $cam_ids = (array) $request->input('cam_id');
+        $quantities = (array) $request->input('quantity');
+        
+        
+        foreach ($cart_ids as $index => $cart_id) {
+            Cart::where('id', $cart_id)->update(['status' => 'sold']);
+            $total_quantity = Camera::where('id', $cam_ids[$index])->value('quantity');
+            $new_quantity = $total_quantity - $quantities[$index];
+            Camera::where('id', $cam_ids[$index])->update(['quantity' => $new_quantity]);
+        }
+        
+        return redirect('/usercart')->with('success','Camera bought successfully.');
+    
+
+}
 
 
 }
